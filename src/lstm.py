@@ -66,7 +66,7 @@ def training_data(sequences, length=40):
 
     return X,y
 
-def train_model(X, y, epochs=400, layers=1):
+def train_model(X, y, epochs=100, layers=1):
     model = Sequential()
     model.add(LSTM(150, input_shape=(X.shape[1], X.shape[2])))
     for i in range(1, layers):
@@ -80,14 +80,14 @@ def train_model(X, y, epochs=400, layers=1):
     model.save('model.h5')
 
 
-def generate_sonnet(model, mapping, seq_length=40, seed = "shall i compare thee to a summer’s day?\n", n_chars=700):
+def generate_sonnet(model, mapping, seq_length=40, seed = "shall i compare thee to a summer’s day?\n", n_chars=520):
     sonnets = []
     for diversity in [0.25, 0.75, 1.5]:
         print('temperature:', diversity)
         generated = seed
         for i in range(n_chars):
             # encode the characters as integers
-            encoded = [mapping[char] for char in seed]
+            encoded = [mapping[char] for char in generated]
             # truncate sequences to a fixed length
             encoded = pad_sequences([encoded], maxlen=seq_length, truncating='pre')
             # one hot encode
