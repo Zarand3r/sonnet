@@ -48,7 +48,7 @@ def training_data(sequences, length=40):
     # all the possible characters, sorted and indexed
     chars = sorted(set([c for s in sequences for c in s]))
     vocabulary = dict((c, i) for i, c in enumerate(chars))
-    dump(vocabulary, open('vocabulary.pkl', 'wb'))
+    dump(vocabulary, open('models/vocabulary.pkl', 'wb'))
     # input will be a list with each character in each sequence mapped to a 1 of k encoding of the vocabulary
     # input will be list of list of one hot vectors
     # output will be a list of one hot vectors corresponding to the next character following each sequence
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     train_model(X,y)
 
     # load the model
-    model = load_model('model.h5')
+    model = load_model('models/model.h5')
     # load the mapping
-    mapping = load(open('vocabulary.pkl', 'rb'))
+    mapping = load(open('models/vocabulary.pkl', 'rb'))
     generate_sonnet(model, mapping)
