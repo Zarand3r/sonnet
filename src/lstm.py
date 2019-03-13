@@ -36,9 +36,9 @@ def get_sequences(sonnets, length=40, step=1):
     for son in sonnets:
         # clean each sonnet and get rid of new lines to combine into one big list
         text = ' '.join(son)
-        tokens = text.split()
-        text = ' '.join(tokens)
-        text = re.sub(r'[^\w\'\s\,]', '', text)
+        # tokens = text.split()
+        # text = ' '.join(tokens)
+        # text = re.sub(r'[^\w\'\s\,]', '', text)
         for i in range(length, len(text), step):
             seq = text[i-length:i+1]
             sequences.append(seq)
@@ -65,7 +65,7 @@ def training_data(sequences, length=40):
 
     return X,y
 
-def train_model(X, y, epochs=100, layers=1):
+def train_model(X, y, epochs=400, layers=1):
     model = Sequential()
     model.add(LSTM(150, input_shape=(X.shape[1], X.shape[2])))
     for i in range(1, layers):
@@ -79,7 +79,7 @@ def train_model(X, y, epochs=100, layers=1):
     model.save('model.h5')
 
 
-def generate_sonnet(model, mapping, seq_length=40, seed = "shall i compare thee to a summer's day?", n_chars=700):
+def generate_sonnet(model, mapping, seq_length=40, seed = "shall i compare thee to a summer’s day?\n", n_chars=700):
     sonnets = []
     for diversity in [0.25, 0.75, 1.5]:
         print('temperature:', diversity)
@@ -94,15 +94,19 @@ def generate_sonnet(model, mapping, seq_length=40, seed = "shall i compare thee 
             # predict character
             yhat = model.predict_classes(encoded, verbose=0)
             # reverse map integer to character
-            out_char = ''
+            prediction = ''
             for char, index in mapping.items():
                 if index == yhat:
-                    out_char = char
+                    prediction = char
                     break
             # add to generated sonnet
-            generated += char
+            generated += prediction
         print(generated)
         sonnets.append(generated)
+        file = open("output.txt", "w")
+        file.write("SONNET!!!\n")
+        file.write(generated, "/n") 
+        file.close()
     return sonnets
 
 
@@ -111,10 +115,12 @@ if __name__ == '__main__':
     sonnets = load_sonnets()
     sequences = get_sequences(sonnets)
     X, y = training_data(sequences)
-    train_model(X,y)
-
-    # load the model
-    model = load_model('models/model.h5')
-    # load the mapping
     mapping = load(open('models/vocabulary.pkl', 'rb'))
-    generate_sonnet(model, mapping)
+    print(mapping)
+    # train_model(X,y)
+
+    # # load the model
+    # model = load_model('models/model.h5')
+    # # load the mapping
+    # mapping = load(open('models/vocabulary.pkl', 'rb'))
+    # generate_sonnet(model, mapping)
