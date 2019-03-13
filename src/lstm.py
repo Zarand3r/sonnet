@@ -115,12 +115,10 @@ if __name__ == '__main__':
     sonnets = load_sonnets()
     sequences = get_sequences(sonnets)
     X, y = training_data(sequences)
-    mapping = load(open('models/vocabulary.pkl', 'rb'))
-    print(mapping)
-    # train_model(X,y)
+    train_model(X,y)
 
-    # # load the model
-    # model = load_model('models/model.h5')
-    # # load the mapping
-    # mapping = load(open('models/vocabulary.pkl', 'rb'))
-    # generate_sonnet(model, mapping)
+    # load the model
+    model = load_model('models/model.h5')
+    # load the mapping
+    mapping = load(open('models/vocabulary.pkl', 'rb'))
+    generate_sonnet(model, mapping)
