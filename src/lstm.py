@@ -39,6 +39,7 @@ def get_sequences(sonnets, length=40, step=1):
         # tokens = text.split()
         # text = ' '.join(tokens)
         # text = re.sub(r'[^\w\'\s\,]', '', text)
+        text = re.sub(r'[^\w\'\s\,\n\?]', '', text)
         for i in range(length, len(text), step):
             seq = text[i-length:i+1]
             sequences.append(seq)
@@ -114,6 +115,7 @@ def generate_sonnet(model, mapping, seq_length=40, seed = "shall i compare thee 
 if __name__ == '__main__':
     sonnets = load_sonnets()
     sequences = get_sequences(sonnets)
+    # print(sequences)
     X, y = training_data(sequences)
     train_model(X,y)
 
@@ -121,4 +123,5 @@ if __name__ == '__main__':
     model = load_model('models/model.h5')
     # load the mapping
     mapping = load(open('models/vocabulary.pkl', 'rb'))
+    # print(mapping)
     generate_sonnet(model, mapping)
